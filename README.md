@@ -1,16 +1,46 @@
-# Beefcake (A sane Google Protocol Buffers library for Ruby)
-## It's all about being Buf; ProtoBuf.
+# Beecake
+## Protocol buffers, now with honey and painful stings.
+
+Beecake is a fork of the Beefcake gem by Blake Mizerany, aimed at making it
+quicker, easier, and more fun to talk to Riak and other services with similar
+Protocol Buffers implementations.
+
+# The Dream
+
+```ruby
+    require 'beecake'
+
+    Beecake.load(
+                 namespace=Riak::Client::BeecakeProtobuffsBackend,
+                 directory='vendor/riak_pb/src',
+                 file='riak_kv.proto'
+                 )
+
+    module Riak
+      module Client
+        module BeefcakeProtobuffsBackend
+          class RpbBucketProps
+            
+            # override any methods
+            def precommit=(newval)
+              @precommit = newval
+              @has_precommit = !!newval
+            end
+          end
+        end
+      end
+    end
 
 # Install
 
-    $ gem install beefcake
+    $ gem install beecake
 
 # Example
 
-    require 'beefcake'
+    require 'beecake'
 
     class Variety
-      include Beefcake::Message
+      include Beecake::Message
 
       # Required
       required :x, :int32, 1
@@ -69,37 +99,26 @@ Any object responding to `<<` can accept encoding
 
 # Generate code from `.proto` file
 
-    $ protoc --beefcake_out output/path -I path/to/proto/files/dir path/to/proto/file
+    $ protoc --beecake_out output/path -I path/to/proto/files/dir path/to/proto/file
 
-You can set the BEEFCAKE_NAMESPACE variable to generate the classes under a
+You can set the BEECAKE_NAMESPACE variable to generate the classes under a
 desired namespace. (i.e. App::Foo::Bar)
-
-# Misc
-
-  This library was built with EventMachine in mind.  Not just blocking-IO.
 
 # Dev
 
 Source:
 
-    $ git clone git://github.com/bmizerany/beefcake
+    $ git clone https://github.com/basho_labs/beecake.git
 
 ## Testing:
 
-    $ gem install turn
-    $ cd /path/to/beefcake
-    $ turn
+    $ rake test
 
 ## VMs:
 
 Currently Beefcake is tested and working on:
 
-* Ruby 1.8.6
-* Ruby 1.8.7
-* Ruby 1.9.2
-* JRuby 1.5.6
-* Rubinius edge
-
+* Ruby 2.0.0
 
 ## Support Features
 
@@ -116,7 +135,6 @@ Currently Beefcake is tested and working on:
 * Enums
 * Defaults (i.e. `optional :foo, :string, :default => "bar"`)
 
-
 ## Future
 
 * Imports
@@ -129,5 +147,6 @@ http://code.google.com/apis/protocolbuffers/docs/encoding.html
 
 # Thank You
 
+Blake Mizerany (bmizerany) for the original gem.
 Keith Rarick (kr) for help with encoding/decoding.
 Aman Gupta (tmm1) for help with cross VM support and performance enhancements.
